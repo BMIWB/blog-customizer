@@ -13,7 +13,7 @@ export const App = () => {
 		useState<ArticleStateType>(defaultArticleState);
 	return (
 		<main
-			className={clsx(styles.main)}
+			className={styles.main}
 			style={
 				{
 					'--font-family': appliedState.fontFamilyOption.value,
