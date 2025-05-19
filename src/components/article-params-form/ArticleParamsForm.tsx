@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowButton } from '../../ui/arrow-button';
 import { Button } from '../../ui/button';
 import { RadioGroup } from '../../ui/radio-group';
@@ -23,6 +23,7 @@ type Props = {
 export const ArticleParamsForm = ({ initialState, onApply }: Props) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [formState, setFormState] = useState<ArticleStateType>(initialState);
+	const sidebarRef = useRef<HTMLElement | null>(null);
 
 	const handleToggleSidebar = () => {
 		setIsMenuOpen((prev) => !prev);
@@ -39,6 +40,25 @@ export const ArticleParamsForm = ({ initialState, onApply }: Props) => {
 		onApply(formState);
 		setIsMenuOpen(false);
 	};
+
+	useEffect(() => {
+		if (!isMenuOpen) return;
+
+		const handleClickOutside = (event: MouseEvent) => {
+			if (
+				sidebarRef.current &&
+				!sidebarRef.current.contains(event.target as Node)
+			) {
+				setIsMenuOpen(false);
+			}
+		};
+
+		document.addEventListener('click', handleClickOutside);
+
+		return () => {
+			document.removeEventListener('click', handleClickOutside);
+		};
+	}, [isMenuOpen]);
 
 	return (
 		<>
